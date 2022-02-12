@@ -1,6 +1,6 @@
 # MyReads Project
 
-This is the workspace for the My Reada project.
+This is the workspace for the My Reads project.
 
 ## To Run The Project
 
