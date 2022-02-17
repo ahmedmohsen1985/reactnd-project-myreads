@@ -7,13 +7,11 @@ const BooksShelf = ({ books, shelfTitle, updateBookShelf }) => {
         <h2 className="bookshelf-title">{shelfTitle}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-
-              {books.map(item => (
-                        <li key={item.id}>
-                            <BookItem book={item} changeBookShelf={updateBookShelf}/>
-                        </li>
-              ))}  
-            
+            {books.map((item) => (
+              <li key={item.id}>
+                <BookItem book={item} changeBookShelf={updateBookShelf} />
+              </li>
+            ))}
           </ol>
         </div>
       </div>
