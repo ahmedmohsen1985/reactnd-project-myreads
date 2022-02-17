@@ -1,26 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import BookItem from '../components/BookItem'
+import * as BooksAPI from '../BooksAPI'
 
-const Search = ({ books }) => {
+const Search = ({ updateBookShelf, mapBooksId }) => {
+    
+  const [searchBooks, setSearchBooks] = useState([]);
+  const [combindBooks, setCombindBooks] = useState([]);
 
-  const [searchBooks, setSearchBooks] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const handleChange = event => {
-    setSearchBooks(event.target.value);
-  };
+  const [query, setQuery] = useState("");
+
   useEffect(() => {
-      const results = books.filter(bookItem =>
-        bookItem.title.toString().toLowerCase().includes(searchBooks)
-      );
-      setSearchResults(results);
-      // eslint-disable-next-line 
-    }, [searchBooks]);
+    let isActive = true;
+    if (query) {
+      BooksAPI.search(query).then(data => {
+        if (data.error) {
+          setSearchBooks([])
+        } else {
+          if (isActive) {
+            setSearchBooks(data);
+          }
+        }
+      })
+    }
+    return () => {
+      isActive = false;
+      setSearchBooks([])
+    }
+
+  }, [query])
+  
+  
+  useEffect(() => {
+
+    const combined = searchBooks.map(book => {
+      if (mapBooksId.has(book.id)) {
+        return mapBooksId.get(book.id);
+      } else {
+        return book;
+      }
+    })
+    setCombindBooks(combined);
+    // eslint-disable-next-line
+   }, [searchBooks])
+ 
+
+
   
   return (
     
-    <div className="box">
-      
+    <div className="box"> 
       <div className="search-books">
         <div className="search-books-bar">
           <Link to="/">
@@ -31,15 +60,16 @@ const Search = ({ books }) => {
             <input
               type="text"
               placeholder="Search by title or author"
-              value={searchBooks}
-              onChange={handleChange}
+              value={query} onChange={(e) => setQuery(e.target.value)}
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid"> 
-            {searchResults.map(item => (
-              <BookItem key={item.id} title={item.title} authors={item.authors} imageLinks={item.imageLinks} books={books} />
+            {combindBooks.map(item => (
+                <li key={item.id}>
+                  <BookItem key={item.id} book={item} changeBookShelf={updateBookShelf} />
+                </li>
             ))}
           </ol>
         </div>
