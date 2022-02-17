@@ -4,9 +4,9 @@ import BookItem from "../components/BookItem";
 import * as BooksAPI from "../BooksAPI";
 
 const Search = ({ updateBookShelf, mapBooksId }) => {
+
   const [searchBooks, setSearchBooks] = useState([]);
   const [combindBooks, setCombindBooks] = useState([]);
-
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -60,15 +60,9 @@ const Search = ({ updateBookShelf, mapBooksId }) => {
         <div className="search-books-results">
           <ol className="books-grid">
             {combindBooks.map((item) =>
-              (!item.imageLinks?.thumbnail || !item?.authors) ??
-              "Unknown Data" ? null : (
                 <li key={item.id}>
-                  <BookItem
-                    book={item}
-                    changeBookShelf={updateBookShelf}
-                  />
+                  <BookItem book={item} changeBookShelf={updateBookShelf} />
                 </li>
-              )
             )}
           </ol>
         </div>
