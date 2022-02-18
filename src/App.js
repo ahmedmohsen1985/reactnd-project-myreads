@@ -52,7 +52,6 @@ function BooksApp() {
             element={
               <Search
                 books={books}
-                mapBooksId={mapBooksId}
                 updateBookShelf={updateBookShelf}
               />
             }

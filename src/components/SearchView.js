@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import BookItem from "../components/BookItem";
 import * as BooksAPI from "../BooksAPI";
 
-const Search = ({ updateBookShelf, mapBooksId }) => {
+const Search = ({ updateBookShelf, books }) => {
 
   const [searchBooks, setSearchBooks] = useState([]);
-  const [combindBooks, setCombindBooks] = useState([]);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -17,6 +16,7 @@ const Search = ({ updateBookShelf, mapBooksId }) => {
           setSearchBooks([]);
         } else {
           if (isActive) {
+            updateShelf(data)
             setSearchBooks(data);
           }
         }
@@ -26,19 +26,21 @@ const Search = ({ updateBookShelf, mapBooksId }) => {
       isActive = false;
       setSearchBooks([]);
     };
+    // eslint-disable-next-line
   }, [query]);
 
-  useEffect(() => {
-    const combined = searchBooks.map((book) => {
-      if (mapBooksId.has(book.id)) {
-        return mapBooksId.get(book.id);
-      } else {
-        return book;
-      }
-    });
-    setCombindBooks(combined);
+  const updateShelf = (searchBooks) => {
     // eslint-disable-next-line
-  }, [searchBooks]);
+    searchBooks && searchBooks.map(book => {
+      book.shelf = 'none'
+      // eslint-disable-next-line
+      books && books.map(bookItem => {
+          if (bookItem.id === book.id) {
+              book.shelf = bookItem.shelf
+          }
+      })
+    })
+  }
 
   return (
     <div className="box">
@@ -59,7 +61,7 @@ const Search = ({ updateBookShelf, mapBooksId }) => {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {combindBooks.map((item) =>
+            {searchBooks.map((item) =>
                 <li key={item.id}>
                   <BookItem book={item} changeBookShelf={updateBookShelf} />
                 </li>
